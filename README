@@ -1,0 +1,5 @@
+Pong game for X Window System.
+
+Compile with: cc -o pong pong.c -lX11
+Run with: ./pong
+License information is in LICENSE.
