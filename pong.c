@@ -30,7 +30,7 @@ typedef struct {
 } Dimensions;
 typedef struct {
 	int x, y;
-	unsigned char direction; /* 0b[y][x]: up/down+left/right, 0=down/left,1=up/right */
+	unsigned char direction; /* 0b[y][x]: down/up+left/right, 0=down/left,1=up/right */
 	int deadtime;
 	unsigned int score;
 } Player;
@@ -110,6 +110,7 @@ void die(const char *msg) {
 }
 
 void dowipe(void) {
+	static const int maxoff = 10;
 	int done = 1;
 	int blocks = (winsz.width + wipe.bs - 1) / wipe.bs;
 	int i;
@@ -118,7 +119,7 @@ void dowipe(void) {
 	if(player.deadtime == 0) {
 		srand(time(NULL));
 		for(i = 0; i < blocks; i++) {
-			wipe.offs[i] = -(rand() % 10);
+			wipe.offs[i] = -(rand() % maxoff);
 		}
 	}
 
@@ -394,6 +395,7 @@ int touchingbar(void) {
 }
 
 void wait4expose(Window where) {
+	XWindowAttributes wa;
 	XEvent ev;
 	/* According to X manual, you should not draw anything onto
 	 * a window until you receive at least one Expose event. */
@@ -402,6 +404,9 @@ void wait4expose(Window where) {
 		XWindowEvent(dpy, where, ExposureMask, &ev);
 		if(ev.xexpose.count == 0) break;
 	}
+	/* unmask exposure event from given window */
+	XGetWindowAttributes(dpy, where, &wa);
+	XSelectInput(dpy, where, wa.your_event_mask & ~ExposureMask);
 	XFlush(dpy);
 }
 
