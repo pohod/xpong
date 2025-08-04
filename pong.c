@@ -216,7 +216,7 @@ void init(void) {
 	swa.event_mask = ExposureMask|KeyPressMask|KeyReleaseMask;
 	swa.cursor = cursors[CursorNormal];
 
-	win = XCreateWindow(dpy, RootWindow(dpy, DefaultScreen(dpy)), 100, 100, 800, 600,
+	win = XCreateWindow(dpy, RootWindow(dpy, DefaultScreen(dpy)), 100, 100, winsz.width, winsz.height,
 	                    0, DefaultDepth(dpy, DefaultScreen(dpy)), InputOutput,
 	                    CopyFromParent, CWBackPixmap|CWEventMask|CWCursor, &swa);
 
