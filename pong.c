@@ -68,7 +68,7 @@ static Pixmap buffer, twbuffer; /* buffers to draw onto (double buffering) */
 static GC gc;
 static Atom WM_DELETE;
 static Cursor cursors[CursorLAST];
-static void (*handlers[])(XEvent *ev) = {
+static void (*handlers[LASTEvent])(XEvent *ev) = {
 	[ClientMessage] = message,
 	[KeyPress] = keypress,
 	[KeyRelease] = keyrelease,
@@ -96,13 +96,8 @@ void bounceplayer(void) {
 }
 
 void die(const char *msg) {
-	if(msg && *msg) {
-		fputs(msg, stderr);
-		if(msg[strlen(msg) - 1] == ':') {
-			fprintf(stderr, " %s", strerror(errno));
-		}
-		fputc('\n', stderr);
-	}
+	fputs(msg, stderr);
+	fputc('\n', stderr);
 
 	if(dpy) XCloseDisplay(dpy);
 
@@ -204,7 +199,7 @@ void init(void) {
 
 	player.x = (winsz.width - PLAYER_SIZE) / 2;
 	player.y = (winsz.height - PLAYER_SIZE) / 2;
-	player.direction = 0b00;
+	player.direction = 0;
 
 	bars[BarLeft].x = BAR_OFFSET;
 	bars[BarLeft].edge_x = BAR_OFFSET + barsz.width;
